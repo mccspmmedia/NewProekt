@@ -1,23 +1,28 @@
 public class Dog20 {
     private String name;
     private int jumpHeight;
-
     private int increasePerOneTraining;
     private int maxJumpHeight;
+
+    // Добавляем константу для увеличения высоты прыжка
+    private static final int JUMP_INCREASE = 10;
+
+    // Добавляем поле для подсчета прыжков
+    private static int totalJumps = 0;
 
     public Dog20(String name, int jumpHeight) {
         this.name = name;
         this.jumpHeight = jumpHeight;
-        this.increasePerOneTraining = 10;
+        this.increasePerOneTraining = JUMP_INCREASE;
         this.maxJumpHeight = jumpHeight * 2;
     }
 
     public void jump() {
         System.out.println(name + " прыгнула!");
+        totalJumps++; // Увеличиваем счетчик прыжков
     }
 
     public void train() {
-
         if (jumpHeight < maxJumpHeight) {
             jumpHeight += increasePerOneTraining;
         }
@@ -25,7 +30,6 @@ public class Dog20 {
         if (jumpHeight > maxJumpHeight) {
             jumpHeight = maxJumpHeight;
         }
-
     }
 
     public boolean takeBarrier(int barrier) {
@@ -52,7 +56,6 @@ public class Dog20 {
             System.out.println("Текущий прыжок: " + jumpHeight);
             return false;
         }
-
     }
 
     public String getName() {
@@ -61,6 +64,11 @@ public class Dog20 {
 
     public int getJumpHeight() {
         return jumpHeight;
+    }
+
+    // Добавляем статический метод для получения общего количества прыжков
+    public static int getTotalJumps() {
+        return totalJumps;
     }
 
     public String toString() {
