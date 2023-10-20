@@ -1,79 +1,182 @@
 package Lesson32;
-// Класс DoublyLinkedList, реализующий интерфейсы
+
 public class DoublyLinkedList<T> implements BasicDoublyLinkedList<T>, ExtendedDoublyLinkedList<T> {
     private Node<T> first;
     private Node<T> last;
     private int size;
 
-    // Реализация методов интерфейса BasicDoublyLinkedList
     @Override
     public void add(T value) {
-        // Ваша реализация добавления элемента в конец списка
+        Node<T> newNode = new Node<>(value);
+        if (last == null) {
+            first = newNode;
+            last = newNode;
+        } else {
+            last.next = newNode;
+            newNode.prev = last;
+            last = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(int index, T value) {
-        // Ваша реализация добавления элемента в указанную позицию
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+
+        if (index == size) {
+            addLast(value);
+        } else if (index == 0) {
+            addFirst(value);
+        } else {
+            Node<T> newNode = new Node<>(value);
+            Node<T> current = getNode(index);
+
+            newNode.prev = current.prev;
+            newNode.next = current;
+            current.prev.next = newNode;
+            current.prev = newNode;
+
+            size++;
+        }
     }
 
     @Override
     public T remove(int index) {
-        // Ваша реализация удаления элемента из указанной позиции
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+
+        Node<T> current = getNode(index);
+        T removedValue = current.value;
+
+        if (current == first) {
+            removeFirst();
+        } else if (current == last) {
+            removeLast();
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            size--;
+        }
+
+        return removedValue;
     }
 
     @Override
     public T get(int index) {
-        // Ваша реализация получения элемента из указанной позиции
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+        return getNode(index).value;
     }
 
     @Override
     public int size() {
-        // Ваша реализация получения количества элементов в списке
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        // Ваша реализация проверки, пуст ли список
+        return size == 0;
     }
 
     @Override
     public void clear() {
-        // Ваша реализация очистки списка
+        first = null;
+        last = null;
+        size = 0;
     }
 
-    // Реализация методов интерфейса ExtendedDoublyLinkedList (которые являются дополнительными)
     @Override
     public void addLast(T value) {
-        // Ваша реализация добавления элемента в конец списка (из ExtendedDoublyLinkedList)
+        add(value);
     }
 
     @Override
     public void addFirst(T value) {
-        // Ваша реализация добавления элемента в начало списка (из ExtendedDoublyLinkedList)
+        Node<T> newNode = new Node<>(value);
+        if (first == null) {
+            first = newNode;
+            last = newNode;
+        } else {
+            newNode.next = first;
+            first.prev = newNode;
+            first = newNode;
+        }
+        size++;
     }
+
 
     @Override
     public T getFirst() {
-        // Ваша реализация получения первого элемента (из ExtendedDoublyLinkedList)
+        if (isEmpty()) {
+            throw new IllegalStateException("The list is empty");
+        }
+        return first.value;
     }
 
     @Override
     public T getLast() {
-        // Ваша реализация получения последнего элемента (из ExtendedDoublyLinkedList)
+        if (isEmpty()) {
+            throw new IllegalStateException("The list is empty");
+        }
+        return last.value;
     }
 
     @Override
     public T remove() {
-        // Ваша реализация удаления первого элемента (из ExtendedDoublyLinkedList)
+        return removeFirst();
     }
 
     @Override
     public T removeFirst() {
-        // Ваша реализация удаления первого элемента (из ExtendedDoublyLinkedList)
+        if (isEmpty()) {
+            throw new IllegalStateException("The list is empty");
+        }
+        T removedValue = first.value;
+        first = first.next;
+        if (first != null) {
+            first.prev = null;
+        } else {
+            last = null;
+        }
+        size--;
+        return removedValue;
     }
 
     @Override
     public T removeLast() {
-        // Ваша реализация удаления последнего элемента (из ExtendedDoublyLinkedList)
+        if (isEmpty()) {
+            throw new IllegalStateException("The list is empty");
+        }
+        T removedValue = last.value;
+        last = last.prev;
+        if (last != null) {
+            last.next = null;
+        } else {
+            first = null;
+        }
+        size--;
+        return removedValue;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> current = first;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private static class Node<T> {
+        T value;
+        Node<T> prev;
+        Node<T> next;
+
+        Node(T value) {
+            this.value = value;
+        }
     }
 }

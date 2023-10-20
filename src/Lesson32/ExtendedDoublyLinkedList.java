@@ -1,5 +1,4 @@
-package Lesson32;
-public interface ExtendedDoublyLinkedList<T> {
+package Lesson32;public interface ExtendedDoublyLinkedList<T> {
     void addLast(T value);
     void addFirst(T value);
     T getFirst();
@@ -8,4 +7,6 @@ public interface ExtendedDoublyLinkedList<T> {
     T removeFirst();
     T removeLast();
 }
+
+
 
